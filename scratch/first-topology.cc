@@ -54,24 +54,29 @@ int main (int argc, char** argv)
   Ipv4InterfaceContainer i3i4 = ipv4.Assign (d3d4);
 
   Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
+
+  UdpEchoServerHelper echoServer (9);
+  ApplicationContainer server = echoServer.Install (allNodes.Get (4));
+  server.Start (Seconds (1.0));
+  server.Stop (Seconds (20.0));
  
   // Client that will send the packets
   UdpEchoClientHelper client (i3i4.GetAddress (1), 9);
-  client.SetAttribute ("MaxPackets", UintegerValue (1));
+  client.SetAttribute ("MaxPackets", UintegerValue (2));
   client.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
   client.SetAttribute ("PacketSize", UintegerValue (1024));
 
   // Send packets
   ApplicationContainer apps = client.Install (allNodes.Get (0));
-  apps.Start (Seconds (1.0));
-  apps.Stop (Seconds (10.0));
+  apps.Start (Seconds (2.0));
+  apps.Stop (Seconds (20.0));
  
   AnimationInterface anim("disgraca.xml");
-  anim.SetConstantPosition (allNodes.Get(0), 0, 50);
-  anim.SetConstantPosition (allNodes.Get(1), 20, 50);
-  anim.SetConstantPosition (allNodes.Get(2), 40, 50);
-  anim.SetConstantPosition (allNodes.Get(3), 60, 50);
-  anim.SetConstantPosition (allNodes.Get(4), 80, 50);
+  anim.SetConstantPosition (allNodes.Get(0), 10, 50);
+  anim.SetConstantPosition (allNodes.Get(1), 30, 50);
+  anim.SetConstantPosition (allNodes.Get(2), 50, 50);
+  anim.SetConstantPosition (allNodes.Get(3), 70, 50);
+  anim.SetConstantPosition (allNodes.Get(4), 90, 50);
 
   NS_LOG_INFO ("Run Simulation.");
   Simulator::Run ();
