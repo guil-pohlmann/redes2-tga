@@ -15,7 +15,22 @@
 using namespace ns3;
  
 NS_LOG_COMPONENT_DEFINE ("SimpleRoutingPing6Example");
- 
+
+void TearDownLink (Ptr<Node> nodeA, Ptr<Node> nodeB)
+{
+  nodeA->GetObject<Ipv4> ()->SetDown (1);
+  nodeB->GetObject<Ipv4> ()->SetDown (1);
+  nodeB->GetObject<Ipv4> ()->SetDown (2);
+
+}
+
+void UpLink (Ptr<Node> nodeA, Ptr<Node> nodeB)
+{
+  nodeA->GetObject<Ipv4> ()->SetUp (1);
+  nodeB->GetObject<Ipv4> ()->SetUp (1);
+  nodeB->GetObject<Ipv4> ()->SetUp (2);
+}
+
 int main (int argc, char** argv)
 {
   NodeContainer allNodes;
@@ -25,6 +40,8 @@ int main (int argc, char** argv)
   NodeContainer n1n2 = NodeContainer (allNodes.Get(1), allNodes.Get(2));
   NodeContainer n2n3 = NodeContainer (allNodes.Get(2), allNodes.Get(3));
   NodeContainer n3n4 = NodeContainer (allNodes.Get(3), allNodes.Get(4));
+
+
 
   // This add IP/TCP/UDP functionality to nodes
   InternetStackHelper internetStack;
@@ -38,6 +55,7 @@ int main (int argc, char** argv)
   NetDeviceContainer d1d2 = p2p.Install (n1n2);
   NetDeviceContainer d2d3 = p2p.Install (n2n3);
   NetDeviceContainer d3d4 = p2p.Install (n3n4);
+
 
   // Set IPs to our devices
   Ipv4AddressHelper ipv4;
@@ -77,6 +95,12 @@ int main (int argc, char** argv)
   anim.SetConstantPosition (allNodes.Get(2), 50, 50);
   anim.SetConstantPosition (allNodes.Get(3), 70, 50);
   anim.SetConstantPosition (allNodes.Get(4), 90, 50);
+
+  Ptr<Node> a = allNodes.Get(0);
+  Ptr<Node> b = allNodes.Get(1);
+
+  Simulator::Schedule (Seconds (2.01), &TearDownLink, a, b);
+  Simulator::Schedule (Seconds (3.00), &UpLink, a, b);
 
   NS_LOG_INFO ("Run Simulation.");
   Simulator::Run ();
