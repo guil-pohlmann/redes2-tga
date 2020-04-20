@@ -61,10 +61,14 @@ int main (int argc, char** argv)
   
   ipv4.SetBase ("10.1.3.0", "255.255.255.0");
   Ipv4InterfaceContainer i1i4 = ipv4.Assign (d1d4);
+  i1i4.SetMetric (0, 2);
+  i1i4.SetMetric (1, 2);
 
   ipv4.SetBase ("10.1.4.0", "255.255.255.0");
   Ipv4InterfaceContainer i2i3 = ipv4.Assign (d2d3);
-  
+  i2i3.SetMetric (0, 2);
+  i2i3.SetMetric (1, 2);
+
   ipv4.SetBase ("10.1.5.0", "255.255.255.0");
   Ipv4InterfaceContainer i2i4 = ipv4.Assign (d2d4);
 
